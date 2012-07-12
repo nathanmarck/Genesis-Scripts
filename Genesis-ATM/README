@@ -1,0 +1,4 @@
+Genesis ATM
+Genesis ATM is a ATM System made for Aurora-Sim that allows for Grid owners to have a economy in-world without having to bring real world money into the situation. Unfortunatley there are some requirements of this ATM. Firstly you must have the latest version of aurora-sim compiled from the git repository. Secondly you must have StarDust.
+
+Setup: Drop the ATM Control.lsl script into the ATM Object. Make sure StarDust is installed and configured correctly.
