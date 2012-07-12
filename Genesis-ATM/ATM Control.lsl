@@ -14,6 +14,7 @@ key put_id;
 key get_id;
 key del_id;
 list crntammount;
+string crntammount2;
 string lolmoney;
 string body;
 string response;
@@ -33,9 +34,14 @@ GetData(key id, list fields, integer verbose)
     args += "&fields="+llEscapeURL(llDumpList2String(fields,separator))+"&verbose="+(string)verbose;
     args += "&secret="+llEscapeURL(secret);
     get_id = llHTTPRequest(url+args,[HTTP_METHOD,"GET",HTTP_MIMETYPE,"application/x-www-form-urlencoded"],"");
-response = llHTTPRequest(get_id,200,url+args);
 
 
+
+}
+PostData(string input)
+{
+   crntammount = llParseString2List(input,["ammount|"], [] ); 
+   crntammount2 = llDumpList2String(crntammount,"");
 }
 DelData(key id, list fields, integer verbose)
 {
@@ -59,7 +65,7 @@ default
     {
         state_entry()
         {
-            llListen(30,"","","");
+            
 
         }
         touch_start(integer total_number)
@@ -91,7 +97,7 @@ default
             {
                
                 crntammount = llParseString2List(response,["ammount|"], [] );
-                llInstantMessage(id,"How much would you like? You currently have £" + (string)crntammount);
+                llInstantMessage(id,"How much would you like? You currently have £" + crntammount2);
 llOwnerSay(response);
 
             }
@@ -130,7 +136,7 @@ llOwnerSay(response);
         // accurate account of what happened.
         if(status != 200) body = "ERROR: CANNOT CONNECT TO SERVER";
         
-
+PostData(body);
     }
 
     }
