@@ -10,14 +10,12 @@ string url = "http://127.0.0.1/data.php";
 string secret = "Luc1s4w3s0m3";
 string separator = "|";
 string ammount = "1000";
+list crntammount;
+string crntammount2;
 key put_id;
 key get_id;
 key del_id;
-list crntammount;
-string crntammount2;
-string lolmoney;
 string body;
-string response;
 PutData(key id, list fields, list values, integer verbose)
 {
     string args;
@@ -95,13 +93,13 @@ default
         {
             if (msg == "Withdraw")
             {
-               
-                crntammount = llParseString2List(response,["ammount|"], [] );
-                llInstantMessage(id,"How much would you like? You currently have £" + crntammount2);
-llOwnerSay(response);
+               GetData(id,["ammount"],TRUE);
+               llSleep(1);
+                
+                llInstantMessage(id,"How much would you like? You currently have £" + (string)crntammount2);
 
             }
-            else if (chan == 20)
+            else if ((chan == 20) && (msg <= crntammount2))
             {
                 llGiveMoney(id,(integer)msg);
                 llInstantMessage(id,"Thanks for using this ATM.");
@@ -135,7 +133,7 @@ llOwnerSay(response);
         // correct, or the server is offline.  Set the body to the server error so the final result is an
         // accurate account of what happened.
         if(status != 200) body = "ERROR: CANNOT CONNECT TO SERVER";
-        
+   
 PostData(body);
     }
 
