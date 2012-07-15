@@ -16,6 +16,7 @@ key put_id;
 key get_id;
 key del_id;
 string body;
+integer wdrawn;
 PutData(key id, list fields, list values, integer verbose)
 {
     string args;
@@ -72,10 +73,10 @@ default
             {
                 user = llDetectedKey(0);
                 inuse = TRUE;
-                options = ["Withdraw","Deposit","Register","About","Help"];
+                options = ["Withdraw","Deposit","Balance","Register","About","Help"];
                 llInstantMessage(llDetectedKey(0),"Welcome to Genesis ATM...");
                 llDialog(llDetectedKey(0),"How may we help you?",options,30);
-                listenhdl = llListen(30,"",llDetectedKey(0),"");
+                listenhdl = llListen(30,"","","");
                 llSetTimerEvent(60);
             }
             else if ((inuse) && (llDetectedKey(0) != user))
@@ -89,34 +90,47 @@ default
                 
             }
         }
-        listen(integer chan,string name,key id,string msg)
+        listen(integer chan,string name,key lid,string msg)
         {
             if (msg == "Withdraw")
             {
-               GetData(id,["ammount"],TRUE);
+               GetData(lid,["ammount"],TRUE);
                withdrwhdl = llListen(20,"","","");
                llSleep(1);
-                llInstantMessage(id,"How much would you like? You currently have £" + (string)crntammount2);
+                llInstantMessage(lid,"How much would you like? You currently have £" + (string)crntammount2);
+
+            }
+             if (msg == "Balance")
+            {
+               GetData(lid,["ammount"],TRUE);
+               llSleep(1);
+                llInstantMessage(lid,"You currently have £" + (string)crntammount2);
+llSetTimerEvent(0);
+inuse = FALSE;
 
             }
             else if ((chan == 20) && ((integer)msg < (integer)crntammount2))
             {
-                llGiveMoney(id,(integer)msg);
-                llInstantMessage(id,"Thanks for using this ATM.");
+                llGiveMoney(lid,(integer)msg);
+                wdrawn = (integer)crntammount2 - (integer)msg;
+                PutData(lid,["ammount"],[wdrawn],FALSE);
+                llInstantMessage(lid,"Thanks for using this ATM.");
                 llListenRemove(listenhdl);
                 llListenRemove(withdrwhdl);
+                llSetTimerEvent(0);
                 inuse = FALSE;
             }
             else if (msg == "Register")
             {
-                PutData(id,["ammount"],[ammount],FALSE);
-                llInstantMessage(id,"Thanks for registering... Your current balance is £1000");
+                PutData(lid,["ammount"],[ammount],FALSE);
+                llInstantMessage(lid,"Thanks for registering... Your current balance is £1000");
             }
 
         }
         timer()
         {
             llListenRemove(listenhdl);
+            inuse = FALSE;
             llSay(0,"ATM timed out... Please try again.");
             llSetTimerEvent(0);
         }
