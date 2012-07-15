@@ -94,12 +94,12 @@ default
             if (msg == "Withdraw")
             {
                GetData(id,["ammount"],TRUE);
+               withdrwhdl = llListen(20,"","","");
                llSleep(1);
-                
                 llInstantMessage(id,"How much would you like? You currently have £" + (string)crntammount2);
 
             }
-            else if ((chan == 20) && (msg <= crntammount2))
+            else if ((chan == 20) && ((integer)msg < (integer)crntammount2))
             {
                 llGiveMoney(id,(integer)msg);
                 llInstantMessage(id,"Thanks for using this ATM.");
