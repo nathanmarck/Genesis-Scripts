@@ -17,6 +17,7 @@ key get_id;
 key del_id;
 string body;
 integer wdrawn;
+integer depo;
 PutData(key id, list fields, list values, integer verbose)
 {
     string args;
@@ -73,7 +74,7 @@ default
             {
                 user = llDetectedKey(0);
                 inuse = TRUE;
-                options = ["Withdraw","Deposit","Balance","Register","About","Help"];
+                options = ["Withdraw","Deposit","Balance","Register"];
                 llInstantMessage(llDetectedKey(0),"Welcome to Genesis ATM...");
                 llDialog(llDetectedKey(0),"How may we help you?",options,30);
                 listenhdl = llListen(30,"","","");
@@ -92,12 +93,17 @@ default
         }
         listen(integer chan,string name,key lid,string msg)
         {
-            if (msg == "Withdraw")
+            if (msg == "Deposit")
+            {
+                llInstantMessage(lid,"Please pay the ATM in order to deposit money.");
+inuse = FALSE;
+}
+           else if (msg == "Withdraw")
             {
                GetData(lid,["ammount"],TRUE);
                withdrwhdl = llListen(20,"","","");
                llSleep(1);
-                llInstantMessage(lid,"How much would you like? You currently have £" + (string)crntammount2);
+                llInstantMessage(lid,"How much would you like? You currently have £" + (string)crntammount2 + "You must use channel 20 to communicate with the ATM");
 
             }
              if (msg == "Balance")
@@ -150,5 +156,15 @@ inuse = FALSE;
    
 PostData(body);
     }
-
+    money(key giver, integer amount) 
+    {
+    GetData(giver,["ammount"],TRUE);
+    llInstantMessage(giver,"Proccesssing.....");
+    llSleep(1);
+    depo = (integer)crntammount2 + (integer)amount;
+                PutData(giver,["ammount"],[depo],FALSE);
+                llInstantMessage(giver,"Thanks for using this ATM. You now have £" + depo);
+              
+                inuse = FALSE;
+    }
     }
