@@ -1,7 +1,7 @@
 Genesis ATM
-Genesis ATM is a ATM System made for Aurora-Sim that allows for Grid owners to have a economy in-world without having to bring real world money into the situation. Unfortunatley there are some requirements of this ATM. Firstly you must have the latest version of aurora-sim compiled from the git repository. Secondly you must have StarDust. You must also have SLDB by Hippo installed to a webserver.
+Genesis ATM is a ATM System made for Aurora-Sim that allows for Grid owners to have a economy in-world without having to bring real world money into the situation. Unfortunatley there are some requirements of this ATM. Firstly you must have the latest version of aurora-sim compiled from the git repository. Secondly you must have an economy module installed. You must also have SLDB by Hippo installed to a webserver.
 
-Setup: Drop the ATM Control.lsl script into the ATM Object. Make sure StarDust is installed and configured correctly.
+Setup: Drop the ATM Control.lsl script into the ATM Object. Make sure your economy module is installed and configured correctly.
 
 SQL: CREATE TABLE IF NOT EXISTS sldata (
   			`id` int(11) NOT NULL auto_increment,
